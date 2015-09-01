@@ -48,9 +48,14 @@ type MPD struct {
 	XMLNs                     *string `xml:"xmlns,attr"`
 	Profiles                  *string `xml:"profiles,attr"`
 	Type                      *string `xml:"type,attr"`
-	MediaPresentationDuration *string `xml:"mediaPresentationDuration,attr"`
-	MinBufferTime             *string `xml:"minBufferTime,attr"`
+	MediaPresentationDuration *string `xml:"mediaPresentationDuration,attr,omitempty"`
+	MinBufferTime             *string `xml:"minBufferTime,attr,omitempty"`
 	Period                    *Period `xml:"Period,omitempty"`
+	AvailabilityStartTime     *string `xml:"availabilityStartTime,attr,omitempty"`
+	PublishTime               *string `xml:"publishTime,attr,omitempty"`
+	TimeShiftBufferDepth      *string `xml:"timeShiftBufferDepth,attr,omitempty"`
+	MinimumUpdatePeriod       *string `xml:"minimumUpdatePeriod,attr,omitempty"`
+	MaxSegmentDuration        *string `xml:"maxSegmentDuration,attr,omitempty"`
 }
 
 type Period struct {
@@ -135,6 +140,31 @@ func NewMPD(profile DashProfile, mediaPresentationDuration string, minBufferTime
 		MediaPresentationDuration: Strptr(mediaPresentationDuration),
 		MinBufferTime:             Strptr(minBufferTime),
 		Period:                    &Period{BaseURL: baseURL},
+	}
+}
+
+// Creates a new dynamic MPD object.
+// profile - DASH Profile (Live or OnDemand).
+// mediaPresentationDuration - Media Presentation Duration (i.e. PT6M16S).
+// maxSegmentDuration - Maximum duration of segments (i.e. PT6S).
+// minUpdatePeriod - Minumum update period (i.e. PT6S).
+// timeShiftBufferDepth - Size of time shift buffer (i.e. PT6S).
+// publishTime - Time of publication (i.e. 2015-08-31T13:56:31Z).
+// availabilityStartTime - Time this stream becomes available (i.e. 2015-08-31T13:56:31Z).
+// minBufferTime - Min Buffer Time (i.e. PT1.97S).
+// baseURL - base url to use to fetch fragments. Nil will be ignored.
+func NewDynamicMPD(profile DashProfile, maxSegmentDuration, minUpdatePeriod, timeShiftBufferDepth, publishTime, availabilityStartTime, minBufferTime, baseURL string) *MPD {
+	return &MPD{
+		XMLNs:                 Strptr("urn:mpeg:dash:schema:mpd:2011"),
+		Profiles:              Strptr((string)(profile)),
+		Type:                  Strptr("dynamic"),
+		MaxSegmentDuration:    Strptr(maxSegmentDuration),
+		MinimumUpdatePeriod:   Strptr(minUpdatePeriod),
+		TimeShiftBufferDepth:  Strptr(timeShiftBufferDepth),
+		PublishTime:           Strptr(publishTime),
+		AvailabilityStartTime: Strptr(availabilityStartTime),
+		MinBufferTime:         Strptr(minBufferTime),
+		Period:                &Period{BaseURL: baseURL},
 	}
 }
 
