@@ -177,6 +177,13 @@ func NewDynamicMPD(profile DashProfile, maxSegmentDuration, minUpdatePeriod, tim
 	}
 }
 
+// Sets a Period level base url for when the manifests and fragments are served by two different hosts.
+// baseURL - Http fragment source. (i.e. http://storage.server.com/)
+func (m *MPD) SetBaseURL(BaseURL string) *Period {
+	m.Period.BaseURL = BaseURL
+	return m.Period
+}
+
 // Create a new Adaptation Set for Audio Assets.
 // mimeType - MIME Type (i.e. audio/mp4).
 // segmentAlignment - Segment Alignment(i.e. true).
