@@ -149,7 +149,7 @@ func NewStaticMPD(profile DashProfile, mediaPresentationDuration string, minBuff
 		Type:     Strptr("static"),
 		MediaPresentationDuration: Strptr(mediaPresentationDuration),
 		MinBufferTime:             Strptr(minBufferTime),
-		Period:                    &Period{BaseURL: baseURL},
+		Period:                    &Period{},
 	}
 }
 
